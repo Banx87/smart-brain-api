@@ -14,6 +14,11 @@ const db = knex({
     connection: {
         connectionString : process.env.DATABASE_URL,
         ssl: true,
+        headers: {
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+        }
         //searchPath: ['knex', 'public']
     },
     pool: {min: 0, max: 7},
@@ -56,7 +61,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
-app.options('*', cors());
+//app.options('*', cors());
 
 app.get('/', (req, res) => { //res.send(db.users);
     res.send('this is working');
