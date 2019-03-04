@@ -56,6 +56,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
+app.options('*', cors());
 
 app.get('/', (req, res) => { //res.send(db.users);
     res.send('this is working');
