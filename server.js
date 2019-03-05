@@ -46,18 +46,18 @@ const db = knex({
 
 const app = express();
 
-//app.use(cors());
 //app.use(allowCrossDomain);
 app.use(bodyParser.json());
 
-//app.options('*', cors());
-app.get('/without-cors', (req, res, next => {
-    res.json({msg: ':( no CORS, no party!'})
-}));
+app.options('*', cors());
 
+//app.use(cors());
 app.get('/with-cors', cors(), (req, res) => { //res.send(db.users);
     res.send('this is working');
 });
+app.get('/without-cors', (req, res, next => {
+    res.json({msg: ':( no CORS, no party!'})
+}));
 
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt)});
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) });
