@@ -51,8 +51,11 @@ const app = express();
 app.use(bodyParser.json());
 
 //app.options('*', cors());
+app.get('/without-cors', (req, res, next => {
+    res.json({msg: ':( no CORS, no party!'})
+}));
 
-app.get('/', (req, res) => { //res.send(db.users);
+app.get('/with-cors', cors(), (req, res) => { //res.send(db.users);
     res.send('this is working');
 });
 
