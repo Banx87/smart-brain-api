@@ -25,42 +25,31 @@ const db = knex({
     acquireConnectionTimeout: 5000
 });
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+        res.send(200);
+    }
+    else {
+        next();
+    }
+};
+
 /*db.select('*').from ('users')
     .then(data => {
         console.log(data);
         });*/
 
 const app = express();
-// mock database 'cause we don't have a real one yet
-/*const database = {
-    users: [
-        {
-            id: '123',
-            name: 'John',
-            password: 'cookies',
-            email: 'john@gmail.com',
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: '124',
-            name: 'Sally',
-            password: 'bananas',
-            email: 'sally@gmail.com',
-            entries: 0,
-            joined: new Date()
-        }
-    ],
-    login: [{
-        id: '987',
-        hash: '',
-        email: 'john@gmail.com'
-    }]
-};*/
 
-
-app.use(bodyParser.json());
 app.use(cors());
+app.use(allowCrossDomain);
+app.use(bodyParser.json());
+
 //app.options('*', cors());
 
 app.get('/', (req, res) => { //res.send(db.users);
@@ -70,8 +59,8 @@ app.get('/', (req, res) => { //res.send(db.users);
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt)});
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) });
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db)});
-app.put('/image', (req, res) => {image.handleImage(req, res, db)});
-app.post('/imageurl', (req, res) => {image.handleApiCall(req, res)});
+app.put('/image', (req, res) => { image.handleImage(req, res, db)});
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res)});
 
 //const DATABASE_URL = process.env.DATABASE_URL;
 app.listen(process.env.PORT || 3000, () => {
